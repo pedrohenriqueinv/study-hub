@@ -2,8 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
 export async function middleware(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qkrhwhqrktateueqozdf.supabase.co';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_hSHIKp-ToLtiz8MifwrtwA_AVSoIHy2';
 
   // Se Supabase não estiver configurado, permite navegação no modo demonstração
   if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('sua-url') || supabaseAnonKey.length < 20) {

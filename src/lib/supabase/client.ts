@@ -1,8 +1,11 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const DEFAULT_SUPABASE_URL = 'https://qkrhwhqrktateueqozdf.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_hSHIKp-ToLtiz8MifwrtwA_AVSoIHy2';
+
+export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
 
 export function isSupabaseConfigured(): boolean {
   return Boolean(

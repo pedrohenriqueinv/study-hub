@@ -203,3 +203,16 @@ DROP POLICY IF EXISTS "Usuários podem deletar seus próprios registros diários
 CREATE POLICY "Usuários podem deletar seus próprios registros diários"
 ON public.daily_study_records FOR DELETE
 USING (auth.uid() = user_id);
+
+-- ==============================================================================
+-- 8. PERMISSÕES DE ACESSO (Roles anon, authenticated e service_role)
+-- ==============================================================================
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA public TO anon, authenticated, service_role;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
+
