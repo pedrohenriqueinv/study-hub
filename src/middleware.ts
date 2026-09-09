@@ -1,14 +1,19 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-export async function middleware(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qkrhwhqrktateueqozdf.supabase.co';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_hSHIKp-ToLtiz8MifwrtwA_AVSoIHy2';
+const REAL_SUPABASE_URL = 'https://qkrhwhqrktateueqozdf.supabase.co';
+const REAL_SUPABASE_ANON_KEY = 'sb_publishable_hSHIKp-ToLtiz8MifwrtwA_AVSoIHy2';
 
-  // Se Supabase não estiver configurado, permite navegação no modo demonstração
-  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('sua-url') || supabaseAnonKey.length < 20) {
-    return NextResponse.next();
-  }
+export async function middleware(request: NextRequest) {
+  const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  const supabaseUrl = (envUrl && envUrl.startsWith('http') && !envUrl.includes('seu-id') && !envUrl.includes('sua-url'))
+    ? envUrl
+    : REAL_SUPABASE_URL;
+  const supabaseAnonKey = (envKey && !envKey.includes('sua-chave') && envKey.length > 25)
+    ? envKey
+    : REAL_SUPABASE_ANON_KEY;
 
   let supabaseResponse = NextResponse.next({
     request,
