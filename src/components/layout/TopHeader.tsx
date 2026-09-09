@@ -1,16 +1,18 @@
 'use client';
 
-import React from 'react';
-import { Calendar, Play, Sparkles, Sun, Moon } from 'lucide-react';
+import Link from 'next/link';
+import { Calendar, Play, Sparkles, Sun, Moon, User as UserIcon } from 'lucide-react';
 import { formatDatePTBR, formatSecondsToHoursMinutes, getWeekNumber } from '@/lib/utils';
 import { useTimer } from '@/contexts/TimerContext';
 import { useData } from '@/contexts/DataContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function TopHeader() {
   const { openModal } = useTimer();
   const { metrics } = useData();
   const { theme, toggleTheme } = useTheme();
+  const { user, profile } = useAuth();
 
   const formattedDate = formatDatePTBR(new Date());
   const weekNumber = getWeekNumber(new Date());
@@ -66,6 +68,21 @@ export function TopHeader() {
         >
           {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
+
+        {/* Mobile Perfil / Login */}
+        <Link
+          href={user ? '/settings' : '/login'}
+          className="lg:hidden w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          title={user ? 'Configurações / Perfil' : 'Entrar na Conta'}
+        >
+          {user ? (
+            <span className="text-[11px] font-bold text-teal-600 dark:text-teal-400 font-mono">
+              {(profile?.full_name || user.email || 'PH').slice(0, 2).toUpperCase()}
+            </span>
+          ) : (
+            <UserIcon className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+          )}
+        </Link>
       </div>
     </header>
   );

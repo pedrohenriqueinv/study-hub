@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import {
@@ -15,10 +16,13 @@ import {
   Smartphone,
   Save,
   User,
+  LogOut,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { user, profile, isConfigured, updateProfile } = useAuth();
+  const { user, profile, isConfigured, updateProfile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const [fullName, setFullName] = useState(profile?.full_name || 'Pedro Henrique');
@@ -131,6 +135,60 @@ CREATE POLICY "records_policy" ON public.daily_study_records FOR ALL USING (auth
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Coluna Esquerda: Perfil & Metas (7 cols) */}
         <div className="lg:col-span-7 flex flex-col gap-6">
+          {/* Card de Sincronização PC & Celular */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-teal-500/10 via-indigo-500/10 to-teal-500/5 border border-teal-500/30 dark:border-teal-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-slate-900 dark:text-white text-sm">
+                    Sincronização PC & Celular
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-teal-100 text-teal-800 dark:bg-teal-950/80 dark:text-teal-300">
+                    {user ? 'Sincronizado' : 'Requer Conta'}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
+                  {user
+                    ? `Logado como ${user.email}. Seus estudos sincronizam automaticamente entre qualquer computador e celular!`
+                    : 'Para que suas matérias e timers do PC apareçam no seu celular, entre com a mesma conta em ambos os aparelhos.'}
+                </p>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex items-center gap-2 self-start sm:self-center">
+              {user ? (
+                <button
+                  onClick={() => signOut()}
+                  className="px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 text-xs font-semibold hover:bg-rose-100 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  type="button"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sair da Conta</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/login"
+                    className="px-3 py-2 rounded-xl bg-slate-900 dark:bg-teal-600 text-white text-xs font-semibold hover:bg-slate-800 transition-colors flex items-center gap-1.5 shadow-xs"
+                  >
+                    <LogIn className="w-3.5 h-3.5" />
+                    <span>Entrar</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-semibold hover:bg-slate-50 transition-colors flex items-center gap-1.5"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>Cadastrar</span>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
           <form
             onSubmit={handleSaveProfile}
             className="bg-white dark:bg-[#0E131F] border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-xs flex flex-col gap-5"

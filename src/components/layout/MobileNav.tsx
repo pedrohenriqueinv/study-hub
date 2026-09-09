@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, BookOpen, Timer, Layers, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Timer, Layers, BarChart3, Settings } from 'lucide-react';
 import { useTimer } from '@/contexts/TimerContext';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +17,7 @@ export function MobileNav() {
     { label: 'Timer', path: '/timer', icon: Timer, isTimer: true },
     { label: 'Diário', path: '/daily-notes', icon: Layers },
     { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { label: 'Ajustes', path: '/settings', icon: Settings },
   ];
 
   return (
