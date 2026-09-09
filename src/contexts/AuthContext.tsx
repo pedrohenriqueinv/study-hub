@@ -164,7 +164,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabase) return { error: 'Cliente Supabase não inicializado' };
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error ? error.message : null };
+    if (error) {
+      if (error.message.includes('Email not confirmed')) {
+        return {
+          error: 'E-mail não confirmado. No painel do Supabase, vá em Authentication > Users, clique nos ... do seu usuário e selecione "Auto Confirm", ou desative "Confirm email" em Providers > Email.',
+        };
+      }
+      if (error.message.includes('Invalid login credentials')) {
+        return { error: 'E-mail ou senha incorretos.' };
+      }
+      return { error: error.message };
+    }
+    return { error: null };
   }
 
   async function signUpWithEmail(email: string, password: string, fullName?: string): Promise<{ error: string | null }> {
@@ -202,7 +213,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
     });
 
-    return { error: error ? error.message : null };
+    if (error) {
+      if (error.message.includes('rate limit') || (error as { code?: string }).code === 'over_email_send_rate_limit') {
+        return {
+          error: 'Limite de e-mails do Supabase atingido (3/hora). Para resolver definitivamente sem limites: desmarque "Confirm email" no painel do Supabase (Authentication > Providers > Email).',
+        };
+      }
+      return { error: error.message };
+    }
+
+    return { error: null };
   }
 
   async function signInWithGoogle(): Promise<{ error: string | null }> {
