@@ -216,3 +216,18 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authentic
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
 
+-- ==============================================================================
+-- 9. REPLICAÇÃO EM TEMPO REAL (Cross-device realtime sync)
+-- ==============================================================================
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.subjects;
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.study_sessions;
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.daily_study_records;
+  END IF;
+EXCEPTION WHEN OTHERS THEN
+  NULL;
+END $$;
+
+

@@ -5,13 +5,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function isValidUUID(str?: string | null): boolean {
+  if (!str) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+}
+
 export function formatSecondsToHoursMinutes(seconds: number): string {
   if (!seconds || seconds <= 0) return '0m';
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
 
+  if (hours === 0 && minutes === 0) {
+    return `${secs}s`;
+  }
   if (hours === 0) {
-    return `${minutes}m`;
+    return secs > 0 && minutes < 3 ? `${minutes}m ${secs}s` : `${minutes}m`;
   }
   if (minutes === 0) {
     return `${hours}h`;

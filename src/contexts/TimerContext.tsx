@@ -166,8 +166,8 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
     acoustics.stop();
     setSoundModeState('off');
 
-    // Registrar no banco de dados via DataContext
-    if (finalDuration >= 30) {
+    // Registrar no banco de dados via DataContext (a partir de 1 segundo para não descartar testes rápidos)
+    if (finalDuration >= 1) {
       try {
         await addSession({
           subject_id: currentConfig.sessionType === 'study' ? selectedSubjectId : null,
@@ -177,8 +177,8 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
           session_type: currentConfig.sessionType,
           efficiency_rate: 100,
           notes: currentConfig.sessionType === 'study'
-            ? `Sessão de ${Math.round(finalDuration / 60)} min: ${selectedSubject?.name || 'Estudos'}`
-            : 'Pausa consciente para descanso e alinhamento neural',
+            ? `Sessão de ${finalDuration >= 60 ? `${Math.round(finalDuration / 60)} min` : `${finalDuration}s`}: ${selectedSubject?.name || 'Estudos'}`
+            : `Pausa consciente (${finalDuration >= 60 ? `${Math.round(finalDuration / 60)} min` : `${finalDuration}s`}) para descanso`,
         });
       } catch (err) {
         console.error('Erro ao salvar sessão:', err);
